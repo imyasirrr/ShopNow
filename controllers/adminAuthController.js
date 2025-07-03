@@ -46,7 +46,13 @@ exports.loginAdmin = async (req, res) => {
       return res.redirect("/admin/login");
     }
 
-    req.session.adminId = admin._id;
+    // ✅ Set full admin session
+    req.session.admin = {
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+    };
+
     req.flash("success_msg", "Login successful");
     res.redirect("/admin/dashboard");
   } catch (err) {
@@ -56,9 +62,11 @@ exports.loginAdmin = async (req, res) => {
   }
 };
 
+
 exports.dashboard = (req, res) => {
-  res.render("admin/dashboard");
+  res.render("admin/dashboard", { user: req.session.admin });
 };
+
 
 exports.logoutAdmin = (req, res) => {
   req.session.destroy(() => {

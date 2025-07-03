@@ -2,8 +2,16 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Product = require("../models/Product");
+const isAdmin = require("../middleware/isAdmin");
 
-router.get("/users", async (req, res) => {
+
+// Dashboard (protected)
+router.get("/dashboard", isAdmin, (req, res) => {
+  res.render("admin/dashboard", { user: req.session.admin });
+});
+
+// Users page (protected)
+router.get("/users", isAdmin, async (req, res) => {
   try {
     const users = await User.find();
     res.render("admin/users", { users });
@@ -12,7 +20,8 @@ router.get("/users", async (req, res) => {
   }
 });
 
-router.get("/product", async (req, res) => {
+// Products page (protected)
+router.get("/product", isAdmin, async (req, res) => {
   try {
     const products = await Product.find();
     res.render("admin/product", { products });
