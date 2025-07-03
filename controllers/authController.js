@@ -1,10 +1,12 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 
+// GET: Login Page
 exports.getLogin = (req, res) => {
   res.render("auth/login", { error: null });
 };
 
+// POST: Login
 exports.postLogin = async (req, res) => {
   const { email, password } = req.body;
 
@@ -16,21 +18,24 @@ exports.postLogin = async (req, res) => {
     }
 
     const match = await bcrypt.compare(password, user.password);
-
     if (!match) {
       return res.render("auth/login", { error: "Invalid password" });
     }
 
- 
+    // Save user session
     req.session.user = {
       id: user._id,
       name: user.name,
-      email: user.email
+      email: user.email,
+      role: user.role // ✅ Required for admin check
     };
 
-
-    // ✅ Redirect after login
-    res.redirect("/");
+    // ✅ Redirect based on role
+    if (user.role === "admin") {
+      return res.redirect("/admin/dashboard");
+    } else {
+      return res.redirect("/");
+    }
 
   } catch (error) {
     console.error(error);
@@ -38,20 +43,19 @@ exports.postLogin = async (req, res) => {
   }
 };
 
-
-// Register Page
+// GET: Register Page
 exports.getRegister = (req, res) => {
   res.render("auth/register", { error: null });
 };
 
-// Register Handler
+// POST: Register
 exports.postRegister = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.render("auth/register", { error: "Email already in use" });
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.render("auth/register", { error: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -59,23 +63,20 @@ exports.postRegister = async (req, res) => {
     const newUser = new User({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      role: "user" // ✅ Default role
     });
 
     await newUser.save();
-    req.session.user = {
-      id: newUser._id,
-      name: newUser.name,
-      email: newUser.email
-    };
 
-    res.redirect("/");
-  } catch (err) {
-    console.error(err);
-    res.render("auth/register", { error: "Registration failed" });
+    res.redirect("/login");
+  } catch (error) {
+    console.error(error);
+    res.render("auth/register", { error: "Something went wrong" });
   }
 };
 
+// GET: Logout
 exports.logout = (req, res) => {
   req.session.destroy(() => {
     res.redirect("/login");
