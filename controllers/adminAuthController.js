@@ -1,31 +1,31 @@
 const Admin = require("../models/Admin");
 const bcrypt = require("bcrypt");
 
-exports.showRegister = (req, res) => {
-  res.render("admin/register");
-};
+// exports.showRegister = (req, res) => {
+//   res.render("admin/register");
+// };
 
-exports.registerAdmin = async (req, res) => {
-  const { name, email, phone, password } = req.body;
-  try {
-    const exists = await Admin.findOne({ email });
-    if (exists) {
-      req.flash("error_msg", "Admin already exists with this email");
-      return res.redirect("/admin/register");
-    }
+// exports.registerAdmin = async (req, res) => {
+//   const { name, email, phone, password } = req.body;
+//   try {
+//     const exists = await Admin.findOne({ email });
+//     if (exists) {
+//       req.flash("error_msg", "Admin already exists with this email");
+//       return res.redirect("/admin/register");
+//     }
 
-    const hashed = await bcrypt.hash(password, 10);
-    const newAdmin = new Admin({ name, email, phone, password: hashed });
-    await newAdmin.save();
+//     const hashed = await bcrypt.hash(password, 10);
+//     const newAdmin = new Admin({ name, email, phone, password: hashed });
+//     await newAdmin.save();
 
-    req.flash("success_msg", "Registration successful, please login");
-    res.redirect("/admin/login");
-  } catch (err) {
-    console.error(err);
-    req.flash("error_msg", "Registration error");
-    res.redirect("/admin/register");
-  }
-};
+//     req.flash("success_msg", "Registration successful, please login");
+//     res.redirect("/admin/login");
+//   } catch (err) {
+//     console.error(err);
+//     req.flash("error_msg", "Registration error");
+//     res.redirect("/admin/register");
+//   }
+// };
 
 exports.showLogin = (req, res) => {
   res.render("admin/login");

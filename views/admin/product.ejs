@@ -15,10 +15,10 @@
             <th>#</th>
             <th>Image</th>
             <th>Title</th>
-            <th>Description</th>
-            <th>Price (₹)</th>
             <th>Category</th>
-            <th>Created At</th>
+            <th>Price (₹)</th>
+            <!-- <th>Description</th> -->
+            <!-- <th>Created At</th> -->
           </tr>
         </thead>
         <tbody>
@@ -30,10 +30,10 @@
                   <img src="<%= product.image %>" alt="product image" style="width: 60px; height: 60px; object-fit: cover;" class="rounded">
                 </td>
                 <td><%= product.title %></td>
-                <td><%= product.description %></td>
-                <td>₹<%= product.price %></td>
                 <td><%= product.category %></td>
-                <td><%= product.createdAt.toLocaleDateString() %></td>
+                <td>₹<%= product.price %></td>
+                <!-- <td><%= product.description %></td> -->
+                <!-- <td><%= product.createdAt.toLocaleDateString() %></td> -->
               </tr>
             <% }) %>
           <% } else { %>

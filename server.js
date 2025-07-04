@@ -4,6 +4,7 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const flash = require("connect-flash");
+const adminProductRoutes = require("./routes/adminProductRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -69,6 +70,15 @@ app.use("/admin", adminRoutes);
 app.use("/", mainRoutes);
 app.use(authRoutes);
 app.use(adminAuthRoutes); 
+
+
+const productRoutes = require("./routes/main");
+app.use("/shop", productRoutes);
+app.use("/admin/products", adminProductRoutes);
+
+app.use((req, res) => {
+  res.status(404).render("404");
+});
 
 // Start server
 app.listen(PORT, () => {

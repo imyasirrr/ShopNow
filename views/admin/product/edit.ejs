@@ -1,0 +1,47 @@
+<%- include("../layouts/header") %>
+<%- include("../layouts/sidebar") %>
+
+<div class="app-wrapper">
+  <div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="mb-0">Edit Product</h3>
+      <a href="/admin/product" class="btn btn-secondary">← Back to Products</a>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <form action="/admin/products/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" name="title" id="title" class="form-control" value="<%= product.title %>" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea name="description" id="description" class="form-control" rows="4" required><%= product.description %></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="price" class="form-label">Price (₹)</label>
+            <input type="number" name="price" id="price" class="form-control" value="<%= product.price %>" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Current Image</label><br />
+            <img src="/uploads/<%= product.image %>" alt="Product Image" width="80" class="rounded border" />
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Change Image (optional)</label>
+            <input type="file" name="image" id="image" class="form-control" />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Update Product</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../layouts/footer") %>

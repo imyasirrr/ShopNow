@@ -36,7 +36,7 @@
             <span class="nav-link-text">Users</span> </a>
         </li>
         <!--//nav-item-->
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link <%= currentPath === '/admin/product' ? 'active' : '' %>" href="/admin/product">
             <span class="nav-icon">
               <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list" fill="currentColor"
@@ -52,8 +52,40 @@
             </span>
             <span class="nav-link-text">Product</span>
           </a>
-        </li>
+        </li> -->
         <!--//nav-item-->
+        <li class="nav-item has-submenu">
+  <a class="nav-link submenu-toggle" href="/#" data-bs-toggle="collapse" data-bs-target="#submenu-products"
+    aria-expanded="false" aria-controls="submenu-products">
+    <span class="nav-icon">
+      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-box-seam" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8.187.42a.5.5 0 0 0-.374 0l-7 3a.5.5 0 0 0 0 .92L2 5.06v6.88a.5.5 0 0 0 .276.447l6 3a.5.5 0 0 0 .448 0l6-3A.5.5 0 0 0 15 11.94V5.06l1.187-.72a.5.5 0 0 0 0-.92l-7-3zM8 1.058 14.132 4 8 6.942 1.868 4 8 1.058zM3 5.697l4.5 2.25v6.356l-4.5-2.25V5.697zm10 0v6.356l-4.5 2.25V7.947l4.5-2.25z"/>
+      </svg>
+    </span>
+    <span class="nav-link-text">Products</span>
+    <span class="submenu-arrow">
+      <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+      </svg>
+    </span>
+  </a>
+
+  <div id="submenu-products" class="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
+    <ul class="submenu-list list-unstyled">
+      <li class="submenu-item">
+        <a class="submenu-link" href="/admin/products">All Products</a>
+      </li>
+      <li class="submenu-item">
+        <a class="submenu-link" href="/admin/products/create">Add Product</a>
+      </li>
+      <!-- Optional: if you have product categories -->
+      <li class="submenu-item">
+        <a class="submenu-link" href="/admin/categories">Categories</a>
+      </li>
+    </ul>
+  </div>
+</li>
+<!-- Nav Item -->
         <!-- <li class="nav-item has-submenu">
               <a class="nav-link submenu-toggle" href="/#" data-bs-toggle="collapse" data-bs-target="#submenu-1"
                 aria-expanded="false" aria-controls="submenu-1">

@@ -11,8 +11,8 @@ const {
 
 const isAdmin = require("../middleware/isAdmin");
 
-router.get("/admin/register", showRegister);
-router.post("/admin/register", registerAdmin);
+// router.get("/admin/register", showRegister);
+// router.post("/admin/register", registerAdmin);
 
 router.get("/admin/login", showLogin);
 router.post("/admin/login", loginAdmin);

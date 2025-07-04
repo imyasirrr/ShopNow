@@ -1,15 +1,33 @@
 const express = require("express");
 const router = express.Router();
 const { sendMail } = require("../services/mailer");
+const Product = require("../models/Product");
 
 // GET routes
-router.get("/", (req, res) => res.render("index"));
+router.get("/", async (req, res) => {
+  try {
+    const products = await Product.find(); 
+    res.render("index", { products });
+  } catch (err) {
+    console.error("Error loading homepage products:", err);
+    res.render("index", { products: [] });
+  }
+});
 router.get("/about", (req, res) => res.render("about"));
 router.get("/blog", (req, res) => res.render("blog"));
 router.get("/cart", (req, res) => res.render("cart"));
 router.get("/checkout", (req, res) => res.render("checkout"));
 router.get("/services", (req, res) => res.render("services"));
-router.get("/shop", (req, res) => res.render("shop"));
+router.get("/shop", async (req, res) => {
+  try {
+    const products = await Product.find(); // fetch all products from DB
+    res.render("shop", { products }); // pass to EJS
+  } catch (err) {
+    console.error("Error fetching products:", err.message);
+    res.status(500).send("Server error while fetching products");
+  }
+});
+
 router.get("/thankyou", (req, res) => res.render("thankyou"));
 
 // GET Contact page
