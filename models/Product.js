@@ -14,6 +14,11 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Subcategory",
     required: true
+  },
+  slug: {
+    type: String,
+    required: true,
+    unique: true
   }
 }, { timestamps: true });
 

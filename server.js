@@ -74,6 +74,9 @@ app.use(adminAuthRoutes);
 const adminProductRoutes = require("./routes/admin/product");
 app.use("/admin/products", adminProductRoutes);
 
+const productRoutes = require("./routes/productRoutes");
+app.use(productRoutes);
+
 // Admin Routes
 const adminCategoryRoutes = require("./routes/admin/category");
 app.use("/admin/categories", adminCategoryRoutes);

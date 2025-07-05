@@ -1,6 +1,8 @@
 const Product = require("../../models/Product");
 const Category = require("../../models/Category");
 const Subcategory = require("../../models/Subcategory");
+const slugify = require("slugify");
+
 
 // List all products
 exports.listProducts = async (req, res) => {
@@ -33,10 +35,12 @@ exports.showCreateForm = async (req, res) => {
 exports.createProduct = async (req, res) => {
   const { title, description, price, category, subcategory } = req.body;
   const image = req.file ? req.file.filename : null;
+  const slug = slugify(title, { lower: true, strict: true });
 
   try {
     await Product.create({
       title,
+      slug,
       description,
       price,
       image,
@@ -51,6 +55,7 @@ exports.createProduct = async (req, res) => {
     res.redirect("/admin/products/create");
   }
 };
+
 
 // Show edit form
 exports.showEditForm = async (req, res) => {
@@ -73,8 +78,13 @@ exports.updateProduct = async (req, res) => {
 
   try {
     const product = await Product.findById(req.params.id);
+    if (!product) {
+      req.flash("error_msg", "Product not found.");
+      return res.redirect("/admin/products");
+    }
 
     product.title = title;
+    product.slug = slugify(title, { lower: true, strict: true });
     product.description = description;
     product.price = price;
     product.category = category;
@@ -93,6 +103,7 @@ exports.updateProduct = async (req, res) => {
     res.redirect("/admin/products");
   }
 };
+
 
 // Delete product
 exports.deleteProduct = async (req, res) => {
