@@ -5,6 +5,16 @@ const productSchema = new mongoose.Schema({
   description: String,
   price: Number,
   image: String,
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true
+  },
+  subcategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subcategory",
+    required: true
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Product", productSchema);

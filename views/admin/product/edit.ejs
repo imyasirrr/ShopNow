@@ -1,20 +1,20 @@
 <%- include("../layouts/header") %>
+<%- include("../layouts/navbar") %>
 <%- include("../layouts/sidebar") %>
 
 <div class="app-wrapper">
   <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h3 class="mb-0">Edit Product</h3>
-      <a href="/admin/product" class="btn btn-secondary">← Back to Products</a>
+      <a href="/admin/products" class="btn btn-secondary">← Back to Products</a>
     </div>
 
-    <!-- Form Card -->
     <div class="card shadow-sm">
       <div class="card-body">
         <form action="/admin/products/edit/<%= product._id %>" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" name="title" id="title" class="form-control" value="<%= product.title %>" required />
+            <input type="text" name="title" id="title" value="<%= product.title %>" class="form-control" required />
           </div>
 
           <div class="mb-3">
@@ -24,17 +24,40 @@
 
           <div class="mb-3">
             <label for="price" class="form-label">Price (₹)</label>
-            <input type="number" name="price" id="price" class="form-control" value="<%= product.price %>" required />
+            <input type="number" name="price" id="price" value="<%= product.price %>" class="form-control" required />
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Current Image</label><br />
-            <img src="/uploads/<%= product.image %>" alt="Product Image" width="80" class="rounded border" />
+            <label for="category" class="form-label">Category</label>
+            <select name="category" id="category" class="form-control" required>
+              <option value="">-- Select Category --</option>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat._id %>" <%= product.category == cat._id ? "selected" : "" %>><%= cat.name %></option>
+              <% }) %>
+            </select>
           </div>
 
           <div class="mb-3">
-            <label for="image" class="form-label">Change Image (optional)</label>
-            <input type="file" name="image" id="image" class="form-control" />
+            <label for="subcategory" class="form-label">Subcategory</label>
+            <select name="subcategory" id="subcategory" class="form-control" required>
+              <option value="">-- Select Subcategory --</option>
+              <% subcategories
+                .filter(sub => sub.category == product.category.toString())
+                .forEach(sub => { %>
+                <option value="<%= sub._id %>" <%= product.subcategory == sub._id ? "selected" : "" %>><%= sub.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <% if (product.image) { %>
+            <div class="mb-3">
+              <img src="/uploads/<%= product.image %>" alt="Image" width="100" />
+            </div>
+          <% } %>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Replace Image (optional)</label>
+            <input type="file" name="image" id="image" class="form-control" accept="image/*" />
           </div>
 
           <button type="submit" class="btn btn-primary">Update Product</button>
@@ -43,5 +66,28 @@
     </div>
   </div>
 </div>
+
+<script>
+  const categorySelect = document.getElementById("category");
+  const subcategorySelect = document.getElementById("subcategory");
+
+  categorySelect.addEventListener("change", function () {
+    const categoryId = this.value;
+    subcategorySelect.innerHTML = `<option value="">Loading...</option>`;
+
+    fetch(`/admin/subcategories/by-category/${categoryId}`)
+      .then(res => res.json())
+      .then(data => {
+        let options = `<option value="">-- Select Subcategory --</option>`;
+        data.forEach(sub => {
+          options += `<option value="${sub._id}" ${sub._id === "<%= product.subcategory %>" ? 'selected' : ''}>${sub.name}</option>`;
+        });
+        subcategorySelect.innerHTML = options;
+      })
+      .catch(err => {
+        subcategorySelect.innerHTML = `<option value="">Error loading</option>`;
+      });
+  });
+</script>
 
 <%- include("../layouts/footer") %>

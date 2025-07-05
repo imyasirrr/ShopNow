@@ -4,7 +4,6 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const flash = require("connect-flash");
-const adminProductRoutes = require("./routes/adminProductRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,9 +32,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(session({
-  secret: "your-secret",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 60 * 2 } // 2 hours
 }));
 
 app.use(flash());
@@ -51,6 +51,7 @@ app.use((req, res, next) => {
 // Make user session data available in all views
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  res.locals.admin = req.session.admin || null;
   next();
 });
 
@@ -62,7 +63,7 @@ app.use((req, res, next) => {
 // Routes
 const mainRoutes = require("./routes/main");
 const authRoutes = require("./routes/auth");
-const adminAuthRoutes = require("./routes/adminAuthRoutes"); 
+const adminAuthRoutes = require("./routes/admin/auth/adminAuthRoutes"); 
 const adminRoutes = require("./routes/admin");
 app.use("/admin", adminRoutes);
 
@@ -70,11 +71,16 @@ app.use("/admin", adminRoutes);
 app.use("/", mainRoutes);
 app.use(authRoutes);
 app.use(adminAuthRoutes); 
-
-
-const productRoutes = require("./routes/main");
-app.use("/shop", productRoutes);
+const adminProductRoutes = require("./routes/admin/product");
 app.use("/admin/products", adminProductRoutes);
+
+// Admin Routes
+const adminCategoryRoutes = require("./routes/admin/category");
+app.use("/admin/categories", adminCategoryRoutes);
+const adminSubcategoryRoutes = require("./routes/admin/subcategory");
+app.use("/admin/subcategories", adminSubcategoryRoutes);
+
+
 
 app.use((req, res) => {
   res.status(404).render("404");

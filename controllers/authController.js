@@ -27,7 +27,7 @@ exports.postLogin = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
-      role: user.role // ✅ Required for admin check
+      role: user.role, // ✅ Required for admin check
     };
 
     // ✅ Redirect based on role
@@ -36,7 +36,6 @@ exports.postLogin = async (req, res) => {
     } else {
       return res.redirect("/");
     }
-
   } catch (error) {
     console.error(error);
     res.render("auth/login", { error: "Something went wrong" });
@@ -50,7 +49,7 @@ exports.getRegister = (req, res) => {
 
 // POST: Register
 exports.postRegister = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, phone, password } = req.body;
 
   try {
     const existing = await User.findOne({ email });
@@ -63,22 +62,30 @@ exports.postRegister = async (req, res) => {
     const newUser = new User({
       name,
       email,
+      phone,
       password: hashedPassword,
-      role: "user" // ✅ Default role
+      role: "user", // ✅ Default role
     });
 
     await newUser.save();
+    // ✅ Store session immediately after registration
+    req.session.user = {
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      role: newUser.role,
+    };
 
-    res.redirect("/login");
+    res.redirect("/");
   } catch (error) {
     console.error(error);
     res.render("auth/register", { error: "Something went wrong" });
   }
 };
 
-// GET: Logout
+// GET: Logout (User)
 exports.logout = (req, res) => {
-  req.session.destroy(() => {
-    res.redirect("/login");
-  });
+  delete req.session.user; // Remove only user session
+  req.flash("success_msg", "You have been logged out successfully.");
+  res.redirect("/login");
 };

@@ -1,4 +1,4 @@
-const Admin = require("../models/Admin");
+const Admin = require("../../models/Admin");
 const bcrypt = require("bcrypt");
 
 // exports.showRegister = (req, res) => {
@@ -69,8 +69,7 @@ exports.dashboard = (req, res) => {
 
 
 exports.logoutAdmin = (req, res) => {
-  req.session.destroy(() => {
-    req.flash("success_msg", "Logged out successfully");
-    res.redirect("/admin/login");
-  });
+  delete req.session.admin; 
+  req.flash("success_msg", "Admin logged out successfully.");
+  res.redirect("/admin/login");
 };

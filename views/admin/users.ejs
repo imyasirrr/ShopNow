@@ -1,6 +1,11 @@
-<%- include("./layouts/header") %>
-<%- include("./layouts/sidebar") %>
+<%- include('layouts/header') %>
 
+<body class="app">
+  <header class="app-header fixed-top">
+<%- include('layouts/navbar') %>
+
+<%- include('layouts/sidebar') %>
+  </header>
 <div class="app-wrapper">
   <div class="container py-4">
     <h3 class="mb-4">All Users</h3>
